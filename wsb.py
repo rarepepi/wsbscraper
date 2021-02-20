@@ -142,7 +142,7 @@ async def main():
             for f in filtered:
                 tickers.append(f)
     print(f"looked through {len(raw_comments_list)} total comments and found {len(tickers)} ticker symbols")
-    return(Counter(tickers))
+    print(Counter(tickers))
     toc = time.perf_counter()
     print(f"{toc - tic:0.4f} seconds")
 
