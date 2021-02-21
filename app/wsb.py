@@ -147,10 +147,10 @@ async def main():
     print(f"{toc - tic:0.4f} seconds")
 
 
-if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
-    try:
-        loop.run_forever()
-    finally:
-        loop.close()
+# if __name__ == '__main__':
+#     loop = asyncio.get_event_loop()
+#     loop.run_until_complete(main())
+#     try:
+#         loop.run_forever()
+#     finally:
+#         loop.close()

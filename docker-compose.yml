@@ -1,15 +1,12 @@
-version: '3.0'
+version: '3'
 
 services:
-  streamlit:
+  app:
+    image: streamlit-docker
     build:
       dockerfile: ./Dockerfile
-      context: ./
+      context: .
     ports:
-      - '8501:8501'
+      - 8080:8080
     volumes:
-      - './app/data:/usr/src/app/data:delegated'
-      - './app:/usr/src/app:delegated'
-    environment:
-      - USER_ID=1000
-      - GROUP_ID=1000
+      - ./app:/usr/app/src/
