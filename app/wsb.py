@@ -63,38 +63,26 @@ async def data_for_subreddit(sub, kind):
     return data
 
 
-def filter_by_tickers(comment):
-    tickers = ["GME", "AMC", "NOK", "SLV", "SPCE",
-            "TSLA", "PLTR", "TELL", "HUGE", "CAT", "RIOT"]
-    mentions = []
-    for tick in tickers:
-        if tick in comment:
-            mentions.append(tick)
-    if len(mentions) > 0:
-        return mentions
-    else:
-        return None
-
-async def get_data_frame():
+async def get_data_frame(kind=None):
     tic = time.perf_counter()
     assert os.getenv('REDDIT_CLIENT_ID') is not None
-    kinds = ['hot', 'new', 'top']
-    articles, comments = await data_for_subreddit('wallstreetbets', 'hot')
+    if kind == None: kind = 'hot'
+    # kinds = ['hot', 'new', 'top']
+    articles, comments = await data_for_subreddit('wallstreetbets', kind)
     articles_df = pd.DataFrame(articles)
     comments_df = pd.DataFrame(comments) 
     toc = time.perf_counter()
     print(f"{toc - tic:0.4f} seconds")
     return (articles_df, comments_df)
 
+
 async def main():
     tic = time.perf_counter()
-    assert os.getenv('REDDIT_CLIENT_ID') is not None
     kinds = ['hot', 'new', 'top']
     # task = asyncio.createTask(data_for_subreddit('wallstreetbets', 'hot'))
     # done, pending = await task()
     # if done:
     #     print(done)
-    # data = await asyncio.gather(*[data_for_subreddit('wallstreetbets', f"{kind}") for kind in kinds])
 
     comments = data[0][1]
     raw_comments_list = [(c['body'], c['ups']) for c in comments]
