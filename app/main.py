@@ -1,43 +1,57 @@
+import asyncio
 import streamlit as st
 import pandas as pd
 import numpy as np
 import time
 from datetime import datetime
-# from wsb import main
+from wsb import get_data_frame
 
 sidebar = {
-    "wallstreetbets": "Wall Street Bets",
-    "bots": "Bots",
-    "test": "Test"
+    "wallstreetbets": "r/WallStreetBets",
+    "investing": "r/Investing"
 }
-
 st.sidebar.title("Control Panel")
-
-dataframe = np.random.randn(10, 20)
-st.dataframe(dataframe)
 option = st.sidebar.selectbox(
     'Which Dashboard',
     list(sidebar.keys()),
     format_func=sidebar.get
 )
-
 st.title(option)
 
+# @st.cache
+async def watch(test):
+    articles_df, comments_df = await get_data_frame()
+    return (articles_df, comments_df)
+
+test = st.empty()
+
 if option == 'wallstreetbets':
-    st.subheader('This is a scraper for WSB')
-    kinds = st.multiselect('Multiselect', ['new', 'hot', 'top'])
+    # st.subheader('This is a scraper for WSB')
 
+    # Sidebar
+    kinds = st.sidebar.multiselect('Multiselect', ['new', 'hot', 'top'])
 
-    x = st.slider('x')
-    st.write(x, 'squared is', x * x)
-    st.progress(x)
+    # Content
+    articles_df = None
+    comments_df = None
+
     st.spinner()
-    with st.spinner(text='In progress'):
-        time.sleep(5)
-        st.success('Done')
-    st.balloons()
+    if st.button("Run"):
+        with st.spinner(text='In progress'):
+            tic = time.perf_counter()
+            articles_df, comments_df = asyncio.run(watch(test))
+            st.success('Done')
+            st.balloons()
+            st.dataframe(articles_df)
+            st.dataframe(comments_df)
+            toc = time.perf_counter()
+            st.write(f"Scraped {articles_df.size} articles, or {comments_df.size} total comments :D")
+            st.write(f"Comments a second: {comments_df.size/(toc - tic}")
 
-if option == 'bots':
+
+async def watch2():
+    pass
+if option == 'investing':
     st.subheader('This is a bot investing off WSB data')
 
     add_slider = st.sidebar.slider(

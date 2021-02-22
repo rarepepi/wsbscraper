@@ -4,6 +4,9 @@ import time
 from asyncpraw.models import MoreComments
 import os
 from collections import Counter
+import config
+from utils import clean_comment, clean_submission
+import pandas as pd
 
 
 async def reddit_instance():
@@ -15,60 +18,6 @@ async def reddit_instance():
         user_agent=os.getenv('REDDIT_USER_AGENT'),
     )
     return reddit
-
-
-def clean_submission(submission):
-    """
-    Take Reddit submission and turn into dictionary
-    """
-    try:
-        submission_author = submission.author.name
-    except:
-        submission_author = "None"
-    data = {
-        "id": submission.id,
-        "title": submission.title,
-        "score": submission.score,
-        "url": submission.url,
-        "name": submission.name,
-        "author": submission_author,
-        "is_video": submission.is_video,
-        "selftext": submission.selftext,
-        "shortlink": submission.shortlink,
-        "subreddit_subscribers": submission.subreddit_subscribers,
-        "thumbnail": submission.thumbnail,
-        "ups": submission.ups,
-        "downs": submission.downs,
-        "created": submission.created
-    }
-
-    for k, v in data.items():
-        if v == "":
-            data[k] = "None"
-    return data
-
-
-def clean_comment(comment):
-    """
-    Clean the comment
-    """
-    try:
-        name = comment.author.name
-    except:
-        name = "None"
-
-    data = {
-        "author": name,
-        "body": comment.body,
-        "ups": comment.ups,
-        "fullname": comment.fullname
-    }
-
-    for k, v in data.items():
-        if v == "":
-            data[k] = "None"
-    return data
-
 
 async def subreddit_type_submissions(sub="wallstreetbets", kind="new"):
     """
@@ -116,7 +65,7 @@ async def data_for_subreddit(sub, kind):
 
 def filter_by_tickers(comment):
     tickers = ["GME", "AMC", "NOK", "SLV", "SPCE",
-               "TSLA", "PLTR", "TELL", "HUGE", "CAT", "RIOT"]
+            "TSLA", "PLTR", "TELL", "HUGE", "CAT", "RIOT"]
     mentions = []
     for tick in tickers:
         if tick in comment:
@@ -126,12 +75,26 @@ def filter_by_tickers(comment):
     else:
         return None
 
+async def get_data_frame():
+    tic = time.perf_counter()
+    assert os.getenv('REDDIT_CLIENT_ID') is not None
+    kinds = ['hot', 'new', 'top']
+    articles, comments = await data_for_subreddit('wallstreetbets', 'hot')
+    articles_df = pd.DataFrame(articles)
+    comments_df = pd.DataFrame(comments) 
+    toc = time.perf_counter()
+    print(f"{toc - tic:0.4f} seconds")
+    return (articles_df, comments_df)
 
 async def main():
     tic = time.perf_counter()
     assert os.getenv('REDDIT_CLIENT_ID') is not None
     kinds = ['hot', 'new', 'top']
-    data = await asyncio.gather(*[data_for_subreddit('wallstreetbets', f"{kind}") for kind in kinds])
+    # task = asyncio.createTask(data_for_subreddit('wallstreetbets', 'hot'))
+    # done, pending = await task()
+    # if done:
+    #     print(done)
+    # data = await asyncio.gather(*[data_for_subreddit('wallstreetbets', f"{kind}") for kind in kinds])
 
     comments = data[0][1]
     raw_comments_list = [(c['body'], c['ups']) for c in comments]
@@ -146,11 +109,3 @@ async def main():
     toc = time.perf_counter()
     print(f"{toc - tic:0.4f} seconds")
 
-
-# if __name__ == '__main__':
-#     loop = asyncio.get_event_loop()
-#     loop.run_until_complete(main())
-#     try:
-#         loop.run_forever()
-#     finally:
-#         loop.close()
