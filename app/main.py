@@ -25,7 +25,6 @@ st.title(option)
 
 if option == 'wallstreetbets':
     st.subheader('This is a scraper for WSB')
-    st.write("testing")
     kinds = st.multiselect('Multiselect', ['new', 'hot', 'top'])
 
 
