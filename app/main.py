@@ -46,7 +46,7 @@ if option == 'wallstreetbets':
             st.dataframe(comments_df)
             toc = time.perf_counter()
             st.write(f"Scraped {articles_df.size} articles, or {comments_df.size} total comments :D")
-            st.write(f"Comments a second: {comments_df.size/(toc - tic}")
+            st.write(f"Comments a second: {comments_df.size/(toc - tic)}")
 
 
 async def watch2():
