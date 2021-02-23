@@ -35,23 +35,23 @@ if option == 'wallstreetbets':
     tickers_raw = st.sidebar.text_area('Enter tickers to search for')
     if len(tickers_raw) == 0: st.sidebar.write("Please insert some tickers")
     st.sidebar.write("""
-    Example list: \n
-        GME
-        AMC
-        OGI
-        VIXY
-        AG
-        TLRY
-        SPY
-        PLTR
-        TLT
-        TSLA
-        RIOT
-        BB
-        AAPL
-        SNDL
-        NIO
-        SQ
+        Example list: \n
+            GME
+            AMC
+            OGI
+            VIXY
+            AG
+            TLRY
+            SPY
+            PLTR
+            TLT
+            TSLA
+            RIOT
+            BB
+            AAPL
+            SNDL
+            NIO
+            SQ
         """
     )
     # Content
@@ -70,6 +70,7 @@ if option == 'wallstreetbets':
             toc = time.perf_counter()
             st.write(f"Scraped {articles_df.shape[0]} articles, or {comments_df.shape[0]} total comments :D")
             st.write(f"Comments a second: {comments_df.shape[0]/(toc - tic)}")
+            st.write(f"Took a total of : {(toc - tic)} seconds")
 
             tickers = tickers_raw.split('\n')
             for t in tickers:
