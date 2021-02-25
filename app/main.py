@@ -41,6 +41,8 @@ if option == 'wallstreetbets':
             OGI
             VIXY
             AG
+            GLD
+            SLV
             TLRY
             SPY
             PLTR
@@ -52,6 +54,15 @@ if option == 'wallstreetbets':
             SNDL
             NIO
             SQ
+            NVDA
+            APHA
+            ZOM
+            FSR
+            PLUG
+            CCIV
+            BA
+            AMD
+            
         """
     )
     # Content
