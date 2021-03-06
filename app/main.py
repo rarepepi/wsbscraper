@@ -62,7 +62,7 @@ if option == 'wallstreetbets':
             CCIV
             BA
             AMD
-            
+            TLT
         """
     )
     # Content
@@ -85,7 +85,7 @@ if option == 'wallstreetbets':
 
             tickers = tickers_raw.split('\n')
             for t in tickers:
-                st.write(f"{t}: {comments_df.body.str.count(t).sum()}")
+                st.write(f"{t}: {comments_df.body.str.count(t).sum() + comments_df.body.str.count(f'${t}').sum()}")
 
 if option == 'investing':
     st.subheader('This is a bot investing off WSB data')
