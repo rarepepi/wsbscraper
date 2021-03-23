@@ -1,4 +1,4 @@
 # wsbscraper
-Wall Street Bets Commentary Bot
+Wall Street Bets Ticker Mentions Bot
 
 https://allocate.social
