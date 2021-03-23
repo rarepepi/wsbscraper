@@ -1,2 +1,4 @@
 # wsbscraper
-Wall Street Bets Commentary
+Wall Street Bets Commentary Bot
+
+https://allocate.social
